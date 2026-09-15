@@ -2,26 +2,42 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>Carte des chalets – Combloux</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   html, body { margin:0; padding:0; height:100%; font-family: -apple-system, Arial, sans-serif; }
   #map { height: 100vh; width: 100%; }
-  .popup-content { font-size: 14px; line-height: 1.4; }
+  .popup-content { font-size: 15px; line-height: 1.5; }
   .popup-content b { color:#c0392b; }
-  .legend { position:absolute; top:10px; right:10px; background:white; padding:10px 14px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.3); z-index:1000; max-width:260px; font-size:13px; }
+  .popup-content a { display:inline-block; margin-top:6px; padding:6px 10px; background:#2980b9; color:white; border-radius:6px; text-decoration:none; font-size:14px; }
+  .leaflet-popup-content { min-width: 220px; }
+  .legend { position:absolute; top:10px; right:10px; left:10px; background:white; padding:10px 14px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.3); z-index:1000; font-size:13px; }
+  @media (min-width: 600px) {
+    .legend { left:auto; max-width:260px; }
+  }
+  @media (max-width: 599px) {
+    .legend { font-size:12px; padding:8px 10px; }
+    .leaflet-popup-content-wrapper { font-size: 15px; }
+    .leaflet-control-zoom a { width:36px !important; height:36px !important; line-height:36px !important; font-size:18px !important; }
+  }
 </style>
 </head>
 <body>
 <div id="map"></div>
 <div class="legend">
-  <b>🏔️ Chalets Combloux (adresses connues)</b><br>
+  <details open id="legendDetails">
+  <summary style="cursor:pointer;"><b>🏔️ Chalets Combloux</b> (voir légende)</summary>
   9 annonces sur 15 ont une adresse (exacte ou approximative).<br>
   Les 6 autres (Airbnb) ne révèlent l'adresse précise qu'après réservation.<br>
   <span style="color:#e74c3c;">🔴 = Top 3 du classement</span><br>
   <span style="color:#e67e22;">🟠 = position approximative</span>
+  </details>
 </div>
+<script>
+  if (window.innerWidth < 600) { document.getElementById('legendDetails').removeAttribute('open'); }
+</script>
 <script>
 const listings = [
   {name:"Appartement spacieux à Combloux, proche du centre", addr:"396 Rte de Sallanches, 74920 Combloux", lat:45.8980685, lon:6.6424875, price:"1945 € / semaine (Airbnb)", link:"https://www.airbnb.se/rooms/573078935833418912", rank:1},

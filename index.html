@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Carte des chalets – Combloux</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  html, body { margin:0; padding:0; height:100%; font-family: -apple-system, Arial, sans-serif; }
+  #map { height: 100vh; width: 100%; }
+  .popup-content { font-size: 14px; line-height: 1.4; }
+  .popup-content b { color:#c0392b; }
+  .legend { position:absolute; top:10px; right:10px; background:white; padding:10px 14px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.3); z-index:1000; max-width:260px; font-size:13px; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="legend">
+  <b>🏔️ Chalets Combloux (adresses connues)</b><br>
+  9 annonces sur 15 ont une adresse (exacte ou approximative).<br>
+  Les 6 autres (Airbnb) ne révèlent l'adresse précise qu'après réservation.<br>
+  <span style="color:#e74c3c;">🔴 = Top 3 du classement</span><br>
+  <span style="color:#e67e22;">🟠 = position approximative</span>
+</div>
+<script>
+const listings = [
+  {name:"Appartement spacieux à Combloux, proche du centre", addr:"396 Rte de Sallanches, 74920 Combloux", lat:45.8980685, lon:6.6424875, price:"1945 € / semaine (Airbnb)", link:"https://www.airbnb.se/rooms/573078935833418912", rank:1},
+  {name:"Les Roches du Mont Blanc – Résidence & Spa", addr:"2325 Route de la Cry Cuchet, 74920 Combloux", lat:45.8953447, lon:6.6410524, price:"2641 € / semaine (Booking)", link:"https://www.booking.com/hotel/fr/terresens-les-roches-blanches.en-gb.html", rank:2},
+  {name:"Appartement Boréal – Au sommet de Combloux", addr:"2989 Route de la Cry Cuchet, Résidence l'Alpage, 74920 Combloux", lat:45.8942915, lon:6.6447832, price:"Booking 2366 € / Airbnb 2218 € (semaine)", link:"https://www.airbnb.se/rooms/1186248511507841405"},
+  {name:"Les Fermes du Mont-Blanc (Terresens)", addr:"281 Route de Megève, 74920 Combloux", lat:45.8926613, lon:6.6452480, price:"2298 € / semaine (Booking)", link:"https://www.booking.com/hotel/fr/les-fermes-du-mont-blanc.en-gb.html"},
+  {name:"Flocon du Médonnet", addr:"Rte du Médonnet, 74920 Combloux", lat:45.9107912, lon:6.6318674, price:"2076 € / semaine (Booking)", link:"https://www.booking.com/hotel/fr/rare-pearl-with-view-of-mont-blanc.en-gb.html"},
+  {name:"Les Praz d'Arvillon – Mont Blanc View Combloux", addr:"330 Route de Bourgeois, 74920 Combloux", lat:45.9051684, lon:6.6294035, price:"Booking 1456 € (le moins cher !) / Airbnb 2226 € (semaine)", link:"https://www.airbnb.se/rooms/2120214"},
+  {name:"Chalet L'Amont du Nant", addr:"1120 Rte du Pelloux, 74920 Combloux (approximatif)", lat:45.8958590, lon:6.6410835, price:"2760 € / semaine (Airbnb)", link:"https://www.airbnb.se/rooms/802351578762494327", approx:true, rank:3},
+  {name:"Séjour alpin avec vue sur le Mont Blanc (chalet Fanfouat)", addr:"Chemin du Sapi, 74920 Combloux", lat:45.8963187, lon:6.6372323, price:"3314 € / semaine (Airbnb)", link:"https://www.airbnb.se/rooms/636079841217094836"}
+];
+
+const map = L.map('map').setView([45.899, 6.638], 14);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors',
+  maxZoom: 19
+}).addTo(map);
+
+listings.forEach(l => {
+  let marker;
+  if (l.rank) {
+    marker = L.circleMarker([l.lat, l.lon], {radius:11, color:'#c0392b', fillColor:'#e74c3c', fillOpacity:0.95, weight:2}).addTo(map);
+  } else if (l.approx) {
+    marker = L.circleMarker([l.lat, l.lon], {radius:9, color:'#e67e22', fillColor:'#e67e22', fillOpacity:0.9}).addTo(map);
+  } else {
+    marker = L.marker([l.lat, l.lon]).addTo(map);
+  }
+  const rankLabel = l.rank ? `🏆 <b>Top ${l.rank}</b><br>` : '';
+  marker.bindPopup(`<div class="popup-content">${rankLabel}<b>${l.name}</b><br>${l.addr}<br>💰 ${l.price}<br><a href="${l.link}" target="_blank">Voir l'annonce</a></div>`);
+});
+</script>
+</body>
+</html>
